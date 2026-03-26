@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>미국 시판 법인 Airmega400 신규 색상 가격 보고</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#F4F3EF; --surface:#FFF; --border:#E0DED8;
+    --tp:#1A1916; --ts:#6B6A65; --tm:#A09E99;
+    --green:#0E6B4A; --gbg:#E8F5EE;
+    --red:#8B3A1E; --rbg:#F9EDE8;
+    --nbg:#F0F8F4; --nborder:#A8D9BF; --ntext:#0E6B4A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tp);font-size:13px;line-height:1.5;padding:24px 28px;}
+  .header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--tp);}
+  .eyebrow{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:4px;font-family:'DM Mono',monospace;}
+  .title{font-size:20px;font-weight:600;color:var(--tp);letter-spacing:-.02em;}
+  .header-right{text-align:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--tm);line-height:1.9;}
+  .edit-toggle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ts);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;transition:all .15s;user-select:none;margin-top:6px;}
+  .edit-toggle:hover{border-color:var(--tp);color:var(--tp);}
+  .edit-toggle.active{background:var(--tp);color:#fff;border-color:var(--tp);}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+  .hint{font-size:10px;color:#BA7517;font-family:'DM Mono',monospace;margin-top:4px;display:none;}
+  body.edit-mode .hint{display:block;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:14px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;}
+  .kpi.dark{background:var(--tp);border-color:var(--tp);}
+  .kpi-label{font-size:10px;font-weight:500;letter-spacing:.05em;color:var(--tm);margin-bottom:4px;}
+  .kpi.dark .kpi-label{color:rgba(255,255,255,.45);}
+  .kpi-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--tp);}
+  .kpi.dark .kpi-val{color:#fff;}
+  .kpi-sub{font-size:10px;margin-top:3px;color:var(--tm);font-family:'DM Mono',monospace;}
+  .kpi.dark .kpi-sub{color:rgba(255,255,255,.4);}
+
+  .section{margin-bottom:13px;}
+  .sec-header{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+  .sec-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--tm);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:1px 5px;}
+  .sec-title{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ts);}
+  .tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  thead tr{background:#F8F7F4;border-bottom:1px solid var(--border);}
+  thead th{padding:7px 10px;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--tm);text-align:center;}
+  thead th:first-child{text-align:left;width:140px;}
+  thead th.nh{background:var(--nbg);color:var(--ntext);border-left:1px solid var(--nborder);border-right:1px solid var(--nborder);}
+  tbody tr{border-bottom:1px solid #F0EEE9;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody td{padding:6px 10px;text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--tp);}
+  tbody td:first-child{text-align:left;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--ts);}
+  tbody tr.sr{background:#FAFAF8;}
+  tbody tr.sr td{font-weight:500;}
+  tbody tr.sr td:first-child{color:var(--tp);}
+  td.nv{background:var(--nbg);color:var(--ntext);border-left:1px solid var(--nborder);border-right:1px solid var(--nborder);font-weight:500;}
+  td.pos{color:var(--green);background:var(--gbg);}
+  td.neg{color:var(--red);background:var(--rbg);}
+
+  .editable{cursor:pointer;}
+  body.edit-mode .editable{outline:1px dashed #BA7517;outline-offset:-1px;}
+  body.edit-mode .editable:hover{background:#FFFDE8 !important;outline:1.5px solid #BA7517;}
+  input.cell-input{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;width:100%;background:#FFFDE8;border:1.5px solid #BA7517;border-radius:3px;padding:3px 4px;text-align:center;color:var(--tp);outline:none;}
+
+  .badge{display:inline-block;font-size:9px;padding:1px 4px;border-radius:3px;font-weight:600;letter-spacing:.04em;vertical-align:middle;margin-left:3px;font-family:'DM Mono',monospace;}
+  .bn{background:var(--nbg);color:var(--ntext);border:1px solid var(--nborder);}
+  .bo{background:#F1EFE8;color:#888;border:1px solid #DDD;}
+  .footer{margin-top:13px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--tm);font-family:'DM Mono',monospace;}
+  .legend{display:flex;gap:14px;align-items:center;}
+  .ld{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px;vertical-align:middle;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="eyebrow">Profitability Review · Coway USA</div>
+    <div class="title">미국 시판 법인 Airmega400 신규 색상 가격 보고</div>
+    <div class="hint">✎ 편집 모드 ON — 셀 클릭 후 숫자 수정, Enter로 확정</div>
+  </div>
+  <div class="header-right">
+    기준: 관세 0% · Mix 가중 평균<br>
+    환율: 1,373원 / USD · 단위: USD
+    <br>
+    <span class="edit-toggle" id="editToggle" onclick="toggleEdit()">
+      <span class="dot"></span> 편집 모드
+    </span>
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi dark">
+    <div class="kpi-label">Silver — 본사 FOB (제품)</div>
+    <div class="kpi-val" id="kpi_fob">-</div>
+    <div class="kpi-sub" id="kpi_fob_sub">-</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Silver — MSRP (제품, 아마존)</div>
+    <div class="kpi-val" id="kpi_msrp">-</div>
+    <div class="kpi-sub" id="kpi_msrp_sub">-</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Silver — 본사 영업이익률</div>
+    <div class="kpi-val" id="kpi_hq_pct">-</div>
+    <div class="kpi-sub" id="kpi_hq_sub">-</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Silver — 연결 영업이익률</div>
+    <div class="kpi-val" id="kpi_cons_pct">-</div>
+    <div class="kpi-sub" id="kpi_cons_sub">-</div>
+  </div>
+</div>
+
+<!-- 01 기본 조건 -->
+<div class="section">
+  <div class="sec-header"><span class="sec-num">01</span><span class="sec-title">기본 조건 비교 — 본사 FOB · 제조원가 · MSRP</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>항목</th>
+      <th>400W <span class="badge bo">기존</span></th>
+      <th>400G <span class="badge bo">기존</span></th>
+      <th class="nh">400 Silver <span class="badge bn">신규</span></th>
+      <th>vs 400W</th><th>vs 400G</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>본사 FOB (제품)</td>
+        <td class="editable" data-key="W_fob_p" onclick="startEdit(this)"></td>
+        <td class="editable" data-key="G_fob_p" onclick="startEdit(this)"></td>
+        <td class="nv editable" data-key="S_fob_p" onclick="startEdit(this)"></td>
+        <td id="d_fob_p_W"></td><td id="d_fob_p_G"></td>
+      </tr>
+      <tr><td>본사 FOB (필터)</td>
+        <td class="editable" data-key="W_fob_f" onclick="startEdit(this)"></td>
+        <td class="editable" data-key="G_fob_f" onclick="startEdit(this)"></td>
+        <td class="nv editable" data-key="S_fob_f" onclick="startEdit(this)"></td>
+        <td id="d_fob_f_W"></td><td id="d_fob_f_G"></td>
+      </tr>
+      <tr><td>제조원가 (제품)</td>
+        <td class="editable" data-key="W_cogs_p" onclick="startEdit(this)"></td>
+        <td class="editable" data-key="G_cogs_p" onclick="startEdit(this)"></td>
+        <td class="nv editable" data-key="S_cogs_p" onclick="startEdit(this)"></td>
+        <td id="d_cogs_W"></td><td id="d_cogs_G"></td>
+      </tr>
+      <tr><td>FOB 마진 (제품)</td>
+        <td id="W_fob_mg"></td><td id="G_fob_mg"></td><td class="nv" id="S_fob_mg"></td>
+        <td id="d_mg_W"></td><td id="d_mg_G"></td>
+      </tr>
+      <tr><td>MSRP — 제품 (아마존)</td>
+        <td class="editable" data-key="W_msrp_p" onclick="startEdit(this)"></td>
+        <td class="editable" data-key="G_msrp_p" onclick="startEdit(this)"></td>
+        <td class="nv editable" data-key="S_msrp_p" onclick="startEdit(this)"></td>
+        <td id="d_msrp_p_W"></td><td id="d_msrp_p_G"></td>
+      </tr>
+      <tr><td>MSRP — 필터 (아마존)</td>
+        <td class="editable" data-key="W_msrp_f" onclick="startEdit(this)"></td>
+        <td class="editable" data-key="G_msrp_f" onclick="startEdit(this)"></td>
+        <td class="nv editable" data-key="S_msrp_f" onclick="startEdit(this)"></td>
+        <td id="d_msrp_f_W"></td><td id="d_msrp_f_G"></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 02 본사 -->
+<div class="section">
+  <div class="sec-header"><span class="sec-num">02</span><span class="sec-title">본사 손익 (FOB 기준, Mix)</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>항목</th><th>400W</th><th>400G</th>
+      <th class="nh">400 Silver</th>
+      <th>vs 400W</th><th>vs 400G</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>매출액 (FOB)</td>
+        <td id="W_hq_rev"></td><td id="G_hq_rev"></td><td class="nv" id="S_hq_rev"></td>
+        <td id="dh_rev_W"></td><td id="dh_rev_G"></td>
+      </tr>
+      <tr><td>매출원가</td>
+        <td id="W_hq_cogs"></td><td id="G_hq_cogs"></td><td class="nv" id="S_hq_cogs"></td>
+        <td id="dh_cogs_W"></td><td id="dh_cogs_G"></td>
+      </tr>
+      <tr><td>매출원가율</td>
+        <td id="W_hq_cr"></td><td id="G_hq_cr"></td><td class="nv" id="S_hq_cr"></td>
+        <td id="dh_cr_W"></td><td id="dh_cr_G"></td>
+      </tr>
+      <tr class="sr"><td>영업이익</td>
+        <td id="W_hq_op"></td><td id="G_hq_op"></td><td class="nv" id="S_hq_op"></td>
+        <td id="dh_op_W"></td><td id="dh_op_G"></td>
+      </tr>
+      <tr class="sr"><td>영업이익률</td>
+        <td id="W_hq_or"></td><td id="G_hq_or"></td><td class="nv" id="S_hq_or"></td>
+        <td id="dh_or_W"></td><td id="dh_or_G"></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 03 법인 -->
+<div class="section">
+  <div class="sec-header"><span class="sec-num">03</span><span class="sec-title">법인 손익 (Mix)</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>항목</th><th>400W</th><th>400G</th>
+      <th class="nh">400 Silver</th>
+      <th>vs 400W</th><th>vs 400G</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>매출액</td>
+        <td id="W_cp_rev"></td><td id="G_cp_rev"></td><td class="nv" id="S_cp_rev"></td>
+        <td id="dc_rev_W"></td><td id="dc_rev_G"></td>
+      </tr>
+      <tr><td>매출원가</td>
+        <td id="W_cp_cogs"></td><td id="G_cp_cogs"></td><td class="nv" id="S_cp_cogs"></td>
+        <td id="dc_cogs_W"></td><td id="dc_cogs_G"></td>
+      </tr>
+      <tr><td>매출원가율</td>
+        <td id="W_cp_cr"></td><td id="G_cp_cr"></td><td class="nv" id="S_cp_cr"></td>
+        <td id="dc_cr_W"></td><td id="dc_cr_G"></td>
+      </tr>
+      <tr class="sr"><td>영업이익</td>
+        <td id="W_cp_op"></td><td id="G_cp_op"></td><td class="nv" id="S_cp_op"></td>
+        <td id="dc_op_W"></td><td id="dc_op_G"></td>
+      </tr>
+      <tr class="sr"><td>영업이익률</td>
+        <td id="W_cp_or"></td><td id="G_cp_or"></td><td class="nv" id="S_cp_or"></td>
+        <td id="dc_or_W"></td><td id="dc_or_G"></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 04 연결 -->
+<div class="section">
+  <div class="sec-header"><span class="sec-num">04</span><span class="sec-title">연결 손익 · Mix 배부</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>항목</th><th>400W</th><th>400G</th>
+      <th class="nh">400 Silver</th>
+      <th>vs 400W</th><th>vs 400G</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>연결 매출액</td>
+        <td id="W_cn_rev"></td><td id="G_cn_rev"></td><td class="nv" id="S_cn_rev"></td>
+        <td id="dn_rev_W"></td><td id="dn_rev_G"></td>
+      </tr>
+      <tr class="sr"><td>연결 영업이익</td>
+        <td id="W_cn_op"></td><td id="G_cn_op"></td><td class="nv" id="S_cn_op"></td>
+        <td id="dn_op_W"></td><td id="dn_op_G"></td>
+      </tr>
+      <tr class="sr"><td>연결 영업이익률</td>
+        <td id="W_cn_or"></td><td id="G_cn_or"></td><td class="nv" id="S_cn_or"></td>
+        <td id="dn_or_W"></td><td id="dn_or_G"></td>
+      </tr>
+      <tr><td>Mix 배부 — 본사</td>
+        <td id="W_mx_hq"></td><td id="G_mx_hq"></td><td class="nv" id="S_mx_hq"></td>
+        <td id="dn_mhq_W"></td><td id="dn_mhq_G"></td>
+      </tr>
+      <tr><td>Mix 배부 — 법인</td>
+        <td id="W_mx_cp"></td><td id="G_mx_cp"></td><td class="nv" id="S_mx_cp"></td>
+        <td id="dn_mcp_W"></td><td id="dn_mcp_G"></td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
+<div class="footer">
+  <div>수익성 Simul. 관세0% 시트 기준 &nbsp;|&nbsp; Mix = 채널 가중 평균</div>
+  <div class="legend">
+    <span><span class="ld" style="background:var(--gbg);border:1px solid #A8D9BF;"></span>개선 / 유리</span>
+    <span><span class="ld" style="background:var(--rbg);border:1px solid #F0C4B0;"></span>비용 증가 / 불리</span>
+    <span><span class="ld" style="background:var(--nbg);border:1px solid var(--nborder);"></span>신규 Silver</span>
+  </div>
+</div>
+
+<script>
+// ── 가정 비율 (파일 기준) ──────────────────────────
+const R = {
+  oh:      0.206304,
+  ship:    0.032254,
+  import_: 0.006,
+  tariff:  0.0,
+  dc:      0.155,
+  promo:   0.094,
+  claim:   0.008,
+  // 아마존 변동비율
+  sell_a:0.038, trans_a:0.084, ware_a:0.068, fin_a:0.005, fee_a:0.003,
+  adv_a: 0.051, other_a:0.079,
+  // 직판 변동비율
+  sell_d:0.044, trans_d:0.130, ware_d:0.056, fin_d:0.005, fee_d:0.018,
+  adv_d: 0.043, other_d:0.047,
+  // 채널 비중 [아마존, 직판]
+  W_ch: [0.87, 0.13],
+  G_ch: [0.87, 0.13],
+  S_ch: [0.87, 0.13],
+  // 총매출할인율 [아마존, 직판]
+  W_disc: [0.35,  0.256],
+  G_disc: [0.35,  0.256],
+  S_disc: [0.35,  0.256],
+};
+const COGS_FILT = 18.08;
+
+// ── 입력값 ────────────────────────────────────────
+const V = {
+  W_fob_p:177.9, W_fob_f:38.5, W_cogs_p:123.47, W_msrp_p:649,  W_msrp_f:129,
+  G_fob_p:187.0, G_fob_f:38.5, G_cogs_p:137.08, G_msrp_p:649,  G_msrp_f:129,
+  S_fob_p:181.0, S_fob_f:38.5, S_cogs_p:138.77, S_msrp_p:649,  S_msrp_f:129,
+};
+
+// ── 계산 ──────────────────────────────────────────
+function calcHQ(p) {
+  const fp=V[p+'_fob_p'], ff=V[p+'_fob_f'], cp=V[p+'_cogs_p'];
+  const rev = fp + ff;
+  const cogs = cp + COGS_FILT + (fp+ff)*R.ship + (fp+ff)*R.oh;
+  return { rev, cogs, op: rev-cogs };
+}
+
+function calcCorp(p) {
+  const fp=V[p+'_fob_p'], ff=V[p+'_fob_f'];
+  const mp=V[p+'_msrp_p'], mf=V[p+'_msrp_f'];
+  const ch=R[p+'_ch'], disc=R[p+'_disc'];
+
+  function ch_calc(is_amz) {
+    const d = is_amz ? disc[0] : disc[1];
+    const rev_p = mp*(1-d), rev_f = mf*(1-d);
+    const rev = rev_p + rev_f;
+    // 매출차감 (아마존만)
+    const deduct = is_amz ? rev*(R.dc+R.promo+R.claim) : 0;
+    const net = rev - deduct;
+    // 매출원가 = 본사FOB + 해상운임 + 수입부대
+    const fob_total = fp + ff;
+    const corp_cogs = fob_total*(1 + R.ship + R.import_);
+    // 변동비
+    const sv = is_amz?R.sell_a:R.sell_d, tv=is_amz?R.trans_a:R.trans_d;
+    const wv = is_amz?R.ware_a:R.ware_d, fv=is_amz?R.fin_a:R.fin_d, ev=is_amz?R.fee_a:R.fee_d;
+    const var_c = net*(sv+tv+wv+fv+ev);
+    // 고정비
+    const av=is_amz?R.adv_a:R.adv_d, ov=is_amz?R.other_a:R.other_d;
+    const fix_c = net*(av+ov);
+    return { rev, corp_cogs, op: rev - deduct - corp_cogs - var_c - fix_c };
+  }
+  const amz=ch_calc(true), dir=ch_calc(false);
+  const rev  = ch[0]*amz.rev       + ch[1]*dir.rev;
+  const cogs = ch[0]*amz.corp_cogs + ch[1]*dir.corp_cogs;
+  const op   = ch[0]*amz.op        + ch[1]*dir.op;
+  return { rev, cogs, op };
+}
+
+// ── 렌더 헬퍼 ─────────────────────────────────────
+const f1  = v => (v>=0?'':'-')+'$'+Math.abs(v).toFixed(1);
+const fp  = v => (v*100).toFixed(1)+'%';
+const d$  = v => (v>=0?'+':'▼')+'$'+Math.abs(v).toFixed(1);
+const dp  = v => (v>=0?'+':'▼')+(Math.abs(v)*100).toFixed(1)+'%p';
+const cls_cost = v => v>=0?'neg':'pos';   // 비용 증가는 나쁨
+const cls_prof = v => v>=0?'pos':'neg';   // 이익 증가는 좋음
+
+function set(id, text, cls) {
+  const el=document.getElementById(id); if(!el)return;
+  el.textContent=text; if(cls)el.className=cls;
+}
+function setD$(id,v,good_if_pos=true) {
+  const el=document.getElementById(id); if(!el)return;
+  el.textContent=d$(v);
+  el.className=good_if_pos? cls_prof(v) : cls_cost(v);
+}
+function setDp(id,v,good_if_pos=true) {
+  const el=document.getElementById(id); if(!el)return;
+  el.textContent=dp(v);
+  el.className=good_if_pos? cls_prof(v) : cls_cost(v);
+}
+
+// ── 전체 재계산 ───────────────────────────────────
+function recalc() {
+  const PS=['W','G','S'];
+  const hq={}, cp={}, cn={};
+  for(const p of PS){ hq[p]=calcHQ(p); cp[p]=calcCorp(p); }
+  for(const p of PS){
+    cn[p]={ rev:cp[p].rev, op:hq[p].op+cp[p].op };
+  }
+
+  // ── 섹션01 입력셀 동기화 ──
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    if(!el.querySelector('input')){
+      const k=el.dataset.key, v=V[k];
+      el.textContent='$'+(Number.isInteger(v)?v:v.toFixed(1));
+    }
+  });
+
+  // FOB 마진
+  for(const p of PS){
+    const m=V[p+'_fob_p']-V[p+'_cogs_p'];
+    set(p+'_fob_mg', f1(m));
+  }
+  // diff 섹션01
+  const row01=[
+    ['fob_p', p=>V[p+'_fob_p'],  false],
+    ['fob_f', p=>V[p+'_fob_f'],  false],
+    ['cogs',  p=>V[p+'_cogs_p'], true ],  // 비용→ 증가 나쁨
+    ['mg',    p=>V[p+'_fob_p']-V[p+'_cogs_p'], false],
+    ['msrp_p',p=>V[p+'_msrp_p'],false],
+    ['msrp_f',p=>V[p+'_msrp_f'],false],
+  ];
+  for(const [key, fn, cost] of row01){
+    for(const x of['W','G']){
+      const id=`d_${key}_${x}`, v=fn('S')-fn(x);
+      const el=document.getElementById(id); if(!el)continue;
+      el.textContent=d$(v);
+      el.className=cost? cls_cost(v) : cls_prof(v);
+    }
+  }
+
+  // ── 섹션02 본사 ──
+  for(const p of PS){
+    set(p+'_hq_rev',  f1(hq[p].rev));
+    set(p+'_hq_cogs', f1(hq[p].cogs));
+    set(p+'_hq_cr',   fp(hq[p].cogs/hq[p].rev));
+    set(p+'_hq_op',   f1(hq[p].op));
+    set(p+'_hq_or',   fp(hq[p].op/hq[p].rev));
+  }
+  for(const x of['W','G']){
+    setD$('dh_rev_W'.replace('W',x),  hq.S.rev-hq[x].rev,   false);
+    setD$('dh_cogs_W'.replace('W',x), hq.S.cogs-hq[x].cogs, true);  // 비용
+    setDp('dh_cr_W'.replace('W',x),   hq.S.cogs/hq.S.rev - hq[x].cogs/hq[x].rev, true);
+    setD$('dh_op_W'.replace('W',x),   hq.S.op-hq[x].op,     false);
+    setDp('dh_or_W'.replace('W',x),   hq.S.op/hq.S.rev - hq[x].op/hq[x].rev, false);
+  }
+  // 매출원가율 개선 = 비율 낮아지면 좋음
+  for(const x of['W','G']){
+    const v=hq.S.cogs/hq.S.rev - hq[x].cogs/hq[x].rev;
+    set('dh_cr_'+x, dp(v), v>=0?'neg':'pos');
+    set('dh_rev_'+x, d$(hq.S.rev-hq[x].rev), cls_prof(hq.S.rev-hq[x].rev));
+    set('dh_cogs_'+x, d$(hq.S.cogs-hq[x].cogs), cls_cost(hq.S.cogs-hq[x].cogs));
+    set('dh_op_'+x, d$(hq.S.op-hq[x].op), cls_prof(hq.S.op-hq[x].op));
+    set('dh_or_'+x, dp(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev), cls_prof(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev));
+  }
+
+  // ── 섹션03 법인 ──
+  for(const p of PS){
+    set(p+'_cp_rev',  f1(cp[p].rev));
+    set(p+'_cp_cogs', f1(cp[p].cogs));
+    set(p+'_cp_cr',   fp(cp[p].cogs/cp[p].rev));
+    set(p+'_cp_op',   f1(cp[p].op));
+    set(p+'_cp_or',   fp(cp[p].op/cp[p].rev));
+  }
+  for(const x of['W','G']){
+    set('dc_rev_'+x,  d$(cp.S.rev-cp[x].rev),   cls_prof(cp.S.rev-cp[x].rev));
+    set('dc_cogs_'+x, d$(cp.S.cogs-cp[x].cogs), cls_cost(cp.S.cogs-cp[x].cogs));
+    const cr_d=cp.S.cogs/cp.S.rev - cp[x].cogs/cp[x].rev;
+    set('dc_cr_'+x,   dp(cr_d), cr_d>=0?'neg':'pos');
+    set('dc_op_'+x,   d$(cp.S.op-cp[x].op),     cls_prof(cp.S.op-cp[x].op));
+    const or_d=cp.S.op/cp.S.rev - cp[x].op/cp[x].rev;
+    set('dc_or_'+x,   dp(or_d), cls_prof(or_d));
+  }
+
+  // ── 섹션04 연결 ──
+  for(const p of PS){
+    set(p+'_cn_rev', f1(cn[p].rev));
+    set(p+'_cn_op',  f1(cn[p].op));
+    set(p+'_cn_or',  fp(cn[p].op/cn[p].rev));
+    const hq_r = hq[p].op/cn[p].op;
+    set(p+'_mx_hq', fp(hq_r));
+    set(p+'_mx_cp', fp(1-hq_r));
+  }
+  for(const x of['W','G']){
+    set('dn_rev_'+x, d$(cn.S.rev-cn[x].rev),  cls_prof(cn.S.rev-cn[x].rev));
+    set('dn_op_'+x,  d$(cn.S.op-cn[x].op),    cls_prof(cn.S.op-cn[x].op));
+    const or_d=cn.S.op/cn.S.rev - cn[x].op/cn[x].rev;
+    set('dn_or_'+x,  dp(or_d), cls_prof(or_d));
+    const mhq_d=hq.S.op/cn.S.op - hq[x].op/cn[x].op;
+    const mcp_d=cp.S.op/cn.S.op - cp[x].op/cn[x].op;
+    set('dn_mhq_'+x, dp(mhq_d), cls_prof(mhq_d));
+    set('dn_mcp_'+x, dp(mcp_d), cls_prof(mcp_d));
+  }
+
+  // ── KPI ──
+  set('kpi_fob',     '$'+V.S_fob_p.toFixed(1));
+  set('kpi_fob_sub', 'vs 400W '+(V.S_fob_p-V.W_fob_p>=0?'+':'▼')+Math.abs(V.S_fob_p-V.W_fob_p).toFixed(1)+' / vs 400G '+(V.S_fob_p-V.G_fob_p>=0?'+':'▼')+Math.abs(V.S_fob_p-V.G_fob_p).toFixed(1));
+  set('kpi_msrp',    '$'+V.S_msrp_p);
+  const md_w=V.S_msrp_p-V.W_msrp_p, md_g=V.S_msrp_p-V.G_msrp_p;
+  set('kpi_msrp_sub','vs 400W '+(md_w>=0?'+':'▼')+Math.abs(md_w)+' / vs 400G '+(md_g>=0?'+':'▼')+Math.abs(md_g));
+  set('kpi_hq_pct',  fp(hq.S.op/hq.S.rev));
+  set('kpi_hq_sub',  '400W '+fp(hq.W.op/hq.W.rev)+' / 400G '+fp(hq.G.op/hq.G.rev));
+  set('kpi_cons_pct',fp(cn.S.op/cn.S.rev));
+  const cd_w=cn.S.op/cn.S.rev-cn.W.op/cn.W.rev, cd_g=cn.S.op/cn.S.rev-cn.G.op/cn.G.rev;
+  set('kpi_cons_sub','vs 400W '+(cd_w>=0?'+':'▼')+(Math.abs(cd_w)*100).toFixed(1)+'%p / vs 400G '+(cd_g>=0?'+':'▼')+(Math.abs(cd_g)*100).toFixed(1)+'%p');
+}
+
+// ── 편집 모드 ─────────────────────────────────────
+let editMode=false;
+function toggleEdit(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  const tog=document.getElementById('editToggle');
+  tog.classList.toggle('active',editMode);
+  tog.innerHTML=editMode?'<span class="dot"></span> 편집 중':'<span class="dot"></span> 편집 모드';
+}
+function startEdit(td){
+  if(!editMode||td.querySelector('input'))return;
+  const key=td.dataset.key, cur=V[key];
+  const inp=document.createElement('input');
+  inp.className='cell-input'; inp.type='number'; inp.step='0.1'; inp.value=cur;
+  td.textContent=''; td.appendChild(inp); inp.focus(); inp.select();
+  function commit(){
+    const nv=parseFloat(inp.value);
+    if(!isNaN(nv)&&nv>0) V[key]=nv;
+    td.textContent='$'+(Number.isInteger(V[key])?V[key]:V[key].toFixed(1));
+    recalc();
+  }
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();commit();}
+    if(e.key==='Escape'){td.textContent='$'+(Number.isInteger(cur)?cur:cur.toFixed(1));}
+  });
+}
+
+recalc();
+</script>
+</body>
+</html>
