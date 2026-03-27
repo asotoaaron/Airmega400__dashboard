@@ -53,7 +53,8 @@
   tbody tr.sr td{font-weight:500;}
   tbody tr.sr td:first-child{color:var(--tp);}
   td.nv{background:var(--nbg);color:var(--ntext);border-left:1px solid var(--nborder);border-right:1px solid var(--nborder);font-weight:500;}
-  td.pos{color:var(--green);background:var(--gbg);}
+  td.nv.neg{color:var(--red);background:var(--rbg);border-left:1px solid var(--rbg);border-right:1px solid var(--rbg);}
+  td.pos{color:var(--tp);background:transparent;}
   td.neg{color:var(--red);background:var(--rbg);}
 
   .editable{cursor:pointer;}
@@ -142,7 +143,7 @@
         <td id="d_cogs_W"></td><td id="d_cogs_G"></td>
       </tr>
       <tr><td>FOB 마진 (제품)</td>
-        <td id="W_fob_mg"></td><td id="G_fob_mg"></td><td class="nv" id="S_fob_mg"></td>
+        <td id="W_fob_mg"></td><td id="G_fob_mg"></td><td class="nv" data-nv="1" id="S_fob_mg"></td>
         <td id="d_mg_W"></td><td id="d_mg_G"></td>
       </tr>
       <tr><td>MSRP — 제품 (아마존)</td>
@@ -172,23 +173,23 @@
     </tr></thead>
     <tbody>
       <tr><td>매출액 (FOB)</td>
-        <td id="W_hq_rev"></td><td id="G_hq_rev"></td><td class="nv" id="S_hq_rev"></td>
+        <td id="W_hq_rev"></td><td id="G_hq_rev"></td><td class="nv" data-nv="1" id="S_hq_rev"></td>
         <td id="dh_rev_W"></td><td id="dh_rev_G"></td>
       </tr>
       <tr><td>매출원가</td>
-        <td id="W_hq_cogs"></td><td id="G_hq_cogs"></td><td class="nv" id="S_hq_cogs"></td>
+        <td id="W_hq_cogs"></td><td id="G_hq_cogs"></td><td class="nv" data-nv="1" id="S_hq_cogs"></td>
         <td id="dh_cogs_W"></td><td id="dh_cogs_G"></td>
       </tr>
       <tr><td>매출원가율</td>
-        <td id="W_hq_cr"></td><td id="G_hq_cr"></td><td class="nv" id="S_hq_cr"></td>
+        <td id="W_hq_cr"></td><td id="G_hq_cr"></td><td class="nv" data-nv="1" id="S_hq_cr"></td>
         <td id="dh_cr_W"></td><td id="dh_cr_G"></td>
       </tr>
       <tr class="sr"><td>영업이익</td>
-        <td id="W_hq_op"></td><td id="G_hq_op"></td><td class="nv" id="S_hq_op"></td>
+        <td id="W_hq_op"></td><td id="G_hq_op"></td><td class="nv" data-nv="1" id="S_hq_op"></td>
         <td id="dh_op_W"></td><td id="dh_op_G"></td>
       </tr>
       <tr class="sr"><td>영업이익률</td>
-        <td id="W_hq_or"></td><td id="G_hq_or"></td><td class="nv" id="S_hq_or"></td>
+        <td id="W_hq_or"></td><td id="G_hq_or"></td><td class="nv" data-nv="1" id="S_hq_or"></td>
         <td id="dh_or_W"></td><td id="dh_or_G"></td>
       </tr>
     </tbody>
@@ -206,23 +207,23 @@
     </tr></thead>
     <tbody>
       <tr><td>매출액</td>
-        <td id="W_cp_rev"></td><td id="G_cp_rev"></td><td class="nv" id="S_cp_rev"></td>
+        <td id="W_cp_rev"></td><td id="G_cp_rev"></td><td class="nv" data-nv="1" id="S_cp_rev"></td>
         <td id="dc_rev_W"></td><td id="dc_rev_G"></td>
       </tr>
       <tr><td>매출원가</td>
-        <td id="W_cp_cogs"></td><td id="G_cp_cogs"></td><td class="nv" id="S_cp_cogs"></td>
+        <td id="W_cp_cogs"></td><td id="G_cp_cogs"></td><td class="nv" data-nv="1" id="S_cp_cogs"></td>
         <td id="dc_cogs_W"></td><td id="dc_cogs_G"></td>
       </tr>
       <tr><td>매출원가율</td>
-        <td id="W_cp_cr"></td><td id="G_cp_cr"></td><td class="nv" id="S_cp_cr"></td>
+        <td id="W_cp_cr"></td><td id="G_cp_cr"></td><td class="nv" data-nv="1" id="S_cp_cr"></td>
         <td id="dc_cr_W"></td><td id="dc_cr_G"></td>
       </tr>
       <tr class="sr"><td>영업이익</td>
-        <td id="W_cp_op"></td><td id="G_cp_op"></td><td class="nv" id="S_cp_op"></td>
+        <td id="W_cp_op"></td><td id="G_cp_op"></td><td class="nv" data-nv="1" id="S_cp_op"></td>
         <td id="dc_op_W"></td><td id="dc_op_G"></td>
       </tr>
       <tr class="sr"><td>영업이익률</td>
-        <td id="W_cp_or"></td><td id="G_cp_or"></td><td class="nv" id="S_cp_or"></td>
+        <td id="W_cp_or"></td><td id="G_cp_or"></td><td class="nv" data-nv="1" id="S_cp_or"></td>
         <td id="dc_or_W"></td><td id="dc_or_G"></td>
       </tr>
     </tbody>
@@ -240,23 +241,23 @@
     </tr></thead>
     <tbody>
       <tr><td>연결 매출액</td>
-        <td id="W_cn_rev"></td><td id="G_cn_rev"></td><td class="nv" id="S_cn_rev"></td>
+        <td id="W_cn_rev"></td><td id="G_cn_rev"></td><td class="nv" data-nv="1" id="S_cn_rev"></td>
         <td id="dn_rev_W"></td><td id="dn_rev_G"></td>
       </tr>
       <tr class="sr"><td>연결 영업이익</td>
-        <td id="W_cn_op"></td><td id="G_cn_op"></td><td class="nv" id="S_cn_op"></td>
+        <td id="W_cn_op"></td><td id="G_cn_op"></td><td class="nv" data-nv="1" id="S_cn_op"></td>
         <td id="dn_op_W"></td><td id="dn_op_G"></td>
       </tr>
       <tr class="sr"><td>연결 영업이익률</td>
-        <td id="W_cn_or"></td><td id="G_cn_or"></td><td class="nv" id="S_cn_or"></td>
+        <td id="W_cn_or"></td><td id="G_cn_or"></td><td class="nv" data-nv="1" id="S_cn_or"></td>
         <td id="dn_or_W"></td><td id="dn_or_G"></td>
       </tr>
       <tr><td>Mix 배부 — 본사</td>
-        <td id="W_mx_hq"></td><td id="G_mx_hq"></td><td class="nv" id="S_mx_hq"></td>
+        <td id="W_mx_hq"></td><td id="G_mx_hq"></td><td class="nv" data-nv="1" id="S_mx_hq"></td>
         <td id="dn_mhq_W"></td><td id="dn_mhq_G"></td>
       </tr>
       <tr><td>Mix 배부 — 법인</td>
-        <td id="W_mx_cp"></td><td id="G_mx_cp"></td><td class="nv" id="S_mx_cp"></td>
+        <td id="W_mx_cp"></td><td id="G_mx_cp"></td><td class="nv" data-nv="1" id="S_mx_cp"></td>
         <td id="dn_mcp_W"></td><td id="dn_mcp_G"></td>
       </tr>
     </tbody>
@@ -278,43 +279,43 @@
       <tr>
         <td>본사 FOB (제품)</td>
         <td id="mx_hq_fob_W"></td><td id="mx_hq_fob_G"></td>
-        <td class="nv" id="mx_hq_fob_S"></td>
+        <td class="nv" data-nv="1" id="mx_hq_fob_S"></td>
         <td id="mx_hq_fob_dW"></td><td id="mx_hq_fob_dG"></td>
       </tr>
       <tr>
         <td>본사 영업이익</td>
         <td id="mx_hq_op_W"></td><td id="mx_hq_op_G"></td>
-        <td class="nv" id="mx_hq_op_S"></td>
+        <td class="nv" data-nv="1" id="mx_hq_op_S"></td>
         <td id="mx_hq_op_dW"></td><td id="mx_hq_op_dG"></td>
       </tr>
       <tr class="sr">
         <td>본사 영업이익률</td>
         <td id="mx_hq_or_W"></td><td id="mx_hq_or_G"></td>
-        <td class="nv" id="mx_hq_or_S"></td>
+        <td class="nv" data-nv="1" id="mx_hq_or_S"></td>
         <td id="mx_hq_or_dW"></td><td id="mx_hq_or_dG"></td>
       </tr>
       <tr>
         <td>법인 영업이익</td>
         <td id="mx_co_op_W"></td><td id="mx_co_op_G"></td>
-        <td class="nv" id="mx_co_op_S"></td>
+        <td class="nv" data-nv="1" id="mx_co_op_S"></td>
         <td id="mx_co_op_dW"></td><td id="mx_co_op_dG"></td>
       </tr>
       <tr class="sr">
         <td>법인 영업이익률</td>
         <td id="mx_co_or_W"></td><td id="mx_co_or_G"></td>
-        <td class="nv" id="mx_co_or_S"></td>
+        <td class="nv" data-nv="1" id="mx_co_or_S"></td>
         <td id="mx_co_or_dW"></td><td id="mx_co_or_dG"></td>
       </tr>
       <tr>
         <td>연결 영업이익</td>
         <td id="mx_cs_op_W"></td><td id="mx_cs_op_G"></td>
-        <td class="nv" id="mx_cs_op_S"></td>
+        <td class="nv" data-nv="1" id="mx_cs_op_S"></td>
         <td id="mx_cs_op_dW"></td><td id="mx_cs_op_dG"></td>
       </tr>
       <tr class="sr">
         <td>연결 영업이익률</td>
         <td id="mx_cs_or_W"></td><td id="mx_cs_or_G"></td>
-        <td class="nv" id="mx_cs_or_S"></td>
+        <td class="nv" data-nv="1" id="mx_cs_or_S"></td>
         <td id="mx_cs_or_dW"></td><td id="mx_cs_or_dG"></td>
       </tr>
     </tbody>
@@ -413,7 +414,11 @@ const cls_prof = v => v>=0?'pos':'neg';   // 이익 증가는 좋음
 
 function set(id, text, cls) {
   const el=document.getElementById(id); if(!el)return;
-  el.textContent=text; if(cls)el.className=cls;
+  el.textContent=text;
+  if(cls){
+    const isNv = el.dataset.nv==='1' || el.className.includes('nv');
+    el.className = isNv ? 'nv '+cls : cls;
+  }
 }
 function setD$(id,v,good_if_pos=true) {
   const el=document.getElementById(id); if(!el)return;
@@ -529,25 +534,20 @@ function recalc() {
     set('dn_mcp_'+x, dp(mcp_d), cls_prof(mcp_d));
   }
 
-
-  // ── 섹션 05: 제품 Mix 손익 (아마존 채널 제품 단품 기준) ──
+  // ── 섹션 05: 제품 Mix 손익 (아마존 채널 제품 단품) ──
   const mx_fob = { W: V.W_fob_p, G: V.G_fob_p, S: V.S_fob_p };
 
-  // 본사: 제품 FOB 단품
   const mx_hq_rev = {}, mx_hq_op = {};
   for(const p of ['W','G','S']){
-    const fp = mx_fob[p];
-    const cp = V[p+'_cogs_p'];
+    const fp = mx_fob[p], cp = V[p+'_cogs_p'];
     mx_hq_rev[p] = fp;
     mx_hq_op[p]  = fp - (cp + fp*R.ship + fp*R.oh);
   }
 
-  // 법인: 아마존 채널 제품 단품
   const mx_co_rev = {}, mx_co_op = {};
   for(const p of ['W','G','S']){
-    const disc = R[p+'_disc'][0];  // 아마존 할인율
-    const fp = mx_fob[p];
-    const mp = V[p+'_msrp_p'];
+    const disc = R[p+'_disc'][0];
+    const fp = mx_fob[p], mp = V[p+'_msrp_p'];
     const rev  = mp*(1-disc);
     const cogs = fp*(1+R.ship+R.import_);
     const ded  = rev*(R.dc+R.promo+R.claim);
@@ -558,7 +558,6 @@ function recalc() {
     mx_co_op[p]  = rev - ded - cogs - varC - fixC;
   }
 
-  // 연결
   const mx_cs_rev = {}, mx_cs_op = {};
   for(const p of ['W','G','S']){
     mx_cs_rev[p] = mx_co_rev[p];
@@ -583,6 +582,7 @@ function recalc() {
     set('mx_cs_op_d'+x,  d$(mx_cs_op.S-mx_cs_op[x]), cls_prof(mx_cs_op.S-mx_cs_op[x]));
     set('mx_cs_or_d'+x,  dp(mx_cs_op.S/mx_cs_rev.S-mx_cs_op[x]/mx_cs_rev[x]), cls_prof(mx_cs_op.S/mx_cs_rev.S-mx_cs_op[x]/mx_cs_rev[x]));
   }
+
   // ── KPI ──
   set('kpi_fob',     '$'+V.S_fob_p.toFixed(1));
   set('kpi_fob_sub', 'vs 400W '+(V.S_fob_p-V.W_fob_p>=0?'+':'▼')+Math.abs(V.S_fob_p-V.W_fob_p).toFixed(1)+' / vs 400G '+(V.S_fob_p-V.G_fob_p>=0?'+':'▼')+Math.abs(V.S_fob_p-V.G_fob_p).toFixed(1));
