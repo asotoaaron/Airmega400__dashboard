@@ -266,7 +266,7 @@
 
 
 <div class="section">
-  <div class="sec-header"><span class="sec-num">05</span><span class="sec-title">제품 Mix 손익 — 본사 · 법인 · 연결 영업이익률</span></div>
+  <div class="sec-header"><span class="sec-num">05</span><span class="sec-title">제품 손익 — 본사, 법인, 연결 영업이익률</span></div>
   <div class="tbl-wrap"><table>
     <thead><tr>
       <th>항목</th>
@@ -409,15 +409,19 @@ const f1  = v => (v>=0?'':'-')+'$'+Math.abs(v).toFixed(1);
 const fp  = v => (v*100).toFixed(1)+'%';
 const d$  = v => (v>=0?'+':'▼')+'$'+Math.abs(v).toFixed(1);
 const dp  = v => (v>=0?'+':'▼')+(Math.abs(v)*100).toFixed(1)+'%p';
-const cls_cost = v => v>=0?'neg':'pos';   // 비용 증가는 나쁨
-const cls_prof = v => v>=0?'pos':'neg';   // 이익 증가는 좋음
+// 마이너스/불리한 값만 빨간색, 나머지는 색 없음
+const neg_only = v => v < 0 ? 'neg' : '';
+const cls_prof = v => v < 0 ? 'neg' : '';   // 이익: 마이너스면 빨간색
+const cls_cost = v => v > 0 ? 'neg' : '';   // 비용: 증가하면 빨간색
 
 function set(id, text, cls) {
   const el=document.getElementById(id); if(!el)return;
   el.textContent=text;
-  if(cls){
-    const isNv = el.dataset.nv==='1' || el.className.includes('nv');
-    el.className = isNv ? 'nv '+cls : cls;
+  const isNv = el.dataset.nv==='1' || el.className.includes('nv');
+  if(cls === undefined || cls === null) {
+    el.className = isNv ? 'nv' : '';
+  } else {
+    el.className = isNv ? ('nv' + (cls ? ' '+cls : '')) : (cls || '');
   }
 }
 function setD$(id,v,good_if_pos=true) {
@@ -451,7 +455,7 @@ function recalc() {
   // FOB 마진
   for(const p of PS){
     const m=V[p+'_fob_p']-V[p+'_cogs_p'];
-    set(p+'_fob_mg', f1(m));
+    set(p+'_fob_mg', f1(m), cls_prof(m));
   }
   // diff 섹션01
   const row01=[
@@ -475,34 +479,26 @@ function recalc() {
   for(const p of PS){
     set(p+'_hq_rev',  f1(hq[p].rev));
     set(p+'_hq_cogs', f1(hq[p].cogs));
-    set(p+'_hq_cr',   fp(hq[p].cogs/hq[p].rev));
-    set(p+'_hq_op',   f1(hq[p].op));
-    set(p+'_hq_or',   fp(hq[p].op/hq[p].rev));
+    set(p+'_hq_cr',   fp(hq[p].cogs/hq[p].rev), hq[p].cogs/hq[p].rev>1?'neg':'');
+    set(p+'_hq_op',   f1(hq[p].op),   cls_prof(hq[p].op));
+    set(p+'_hq_or',   fp(hq[p].op/hq[p].rev), cls_prof(hq[p].op/hq[p].rev));
   }
   for(const x of['W','G']){
-    setD$('dh_rev_W'.replace('W',x),  hq.S.rev-hq[x].rev,   false);
-    setD$('dh_cogs_W'.replace('W',x), hq.S.cogs-hq[x].cogs, true);  // 비용
-    setDp('dh_cr_W'.replace('W',x),   hq.S.cogs/hq.S.rev - hq[x].cogs/hq[x].rev, true);
-    setD$('dh_op_W'.replace('W',x),   hq.S.op-hq[x].op,     false);
-    setDp('dh_or_W'.replace('W',x),   hq.S.op/hq.S.rev - hq[x].op/hq[x].rev, false);
-  }
-  // 매출원가율 개선 = 비율 낮아지면 좋음
-  for(const x of['W','G']){
-    const v=hq.S.cogs/hq.S.rev - hq[x].cogs/hq[x].rev;
-    set('dh_cr_'+x, dp(v), v>=0?'neg':'pos');
-    set('dh_rev_'+x, d$(hq.S.rev-hq[x].rev), cls_prof(hq.S.rev-hq[x].rev));
-    set('dh_cogs_'+x, d$(hq.S.cogs-hq[x].cogs), cls_cost(hq.S.cogs-hq[x].cogs));
-    set('dh_op_'+x, d$(hq.S.op-hq[x].op), cls_prof(hq.S.op-hq[x].op));
-    set('dh_or_'+x, dp(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev), cls_prof(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev));
+    const cr_v = hq.S.cogs/hq.S.rev - hq[x].cogs/hq[x].rev;
+    set('dh_rev_'+x,  d$(hq.S.rev-hq[x].rev),           cls_prof(hq.S.rev-hq[x].rev));
+    set('dh_cogs_'+x, d$(hq.S.cogs-hq[x].cogs),         cls_cost(hq.S.cogs-hq[x].cogs));
+    set('dh_cr_'+x,   dp(cr_v),                          cr_v>0?'neg':'');
+    set('dh_op_'+x,   d$(hq.S.op-hq[x].op),             cls_prof(hq.S.op-hq[x].op));
+    set('dh_or_'+x,   dp(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev), cls_prof(hq.S.op/hq.S.rev-hq[x].op/hq[x].rev));
   }
 
   // ── 섹션03 법인 ──
   for(const p of PS){
     set(p+'_cp_rev',  f1(cp[p].rev));
     set(p+'_cp_cogs', f1(cp[p].cogs));
-    set(p+'_cp_cr',   fp(cp[p].cogs/cp[p].rev));
-    set(p+'_cp_op',   f1(cp[p].op));
-    set(p+'_cp_or',   fp(cp[p].op/cp[p].rev));
+    set(p+'_cp_cr',   fp(cp[p].cogs/cp[p].rev), cp[p].cogs/cp[p].rev>1?'neg':'');
+    set(p+'_cp_op',   f1(cp[p].op),   cls_prof(cp[p].op));
+    set(p+'_cp_or',   fp(cp[p].op/cp[p].rev), cls_prof(cp[p].op/cp[p].rev));
   }
   for(const x of['W','G']){
     set('dc_rev_'+x,  d$(cp.S.rev-cp[x].rev),   cls_prof(cp.S.rev-cp[x].rev));
@@ -517,11 +513,11 @@ function recalc() {
   // ── 섹션04 연결 ──
   for(const p of PS){
     set(p+'_cn_rev', f1(cn[p].rev));
-    set(p+'_cn_op',  f1(cn[p].op));
-    set(p+'_cn_or',  fp(cn[p].op/cn[p].rev));
+    set(p+'_cn_op',  f1(cn[p].op),  cls_prof(cn[p].op));
+    set(p+'_cn_or',  fp(cn[p].op/cn[p].rev), cls_prof(cn[p].op/cn[p].rev));
     const hq_r = hq[p].op/cn[p].op;
-    set(p+'_mx_hq', fp(hq_r));
-    set(p+'_mx_cp', fp(1-hq_r));
+    set(p+'_mx_hq', fp(hq_r),   neg_only(hq_r));
+    set(p+'_mx_cp', fp(1-hq_r), neg_only(1-hq_r));
   }
   for(const x of['W','G']){
     set('dn_rev_'+x, d$(cn.S.rev-cn[x].rev),  cls_prof(cn.S.rev-cn[x].rev));
@@ -566,12 +562,12 @@ function recalc() {
 
   for(const p of ['W','G','S']){
     set('mx_hq_fob_'+p, f1(mx_fob[p]));
-    set('mx_hq_op_'+p,  f1(mx_hq_op[p]));
-    set('mx_hq_or_'+p,  fp(mx_hq_op[p]/mx_hq_rev[p]));
-    set('mx_co_op_'+p,  f1(mx_co_op[p]));
-    set('mx_co_or_'+p,  fp(mx_co_op[p]/mx_co_rev[p]));
-    set('mx_cs_op_'+p,  f1(mx_cs_op[p]));
-    set('mx_cs_or_'+p,  fp(mx_cs_op[p]/mx_cs_rev[p]));
+    set('mx_hq_op_'+p,  f1(mx_hq_op[p]),  cls_prof(mx_hq_op[p]));
+    set('mx_hq_or_'+p,  fp(mx_hq_op[p]/mx_hq_rev[p]), cls_prof(mx_hq_op[p]/mx_hq_rev[p]));
+    set('mx_co_op_'+p,  f1(mx_co_op[p]),  cls_prof(mx_co_op[p]));
+    set('mx_co_or_'+p,  fp(mx_co_op[p]/mx_co_rev[p]), cls_prof(mx_co_op[p]/mx_co_rev[p]));
+    set('mx_cs_op_'+p,  f1(mx_cs_op[p]),  cls_prof(mx_cs_op[p]));
+    set('mx_cs_or_'+p,  fp(mx_cs_op[p]/mx_cs_rev[p]), cls_prof(mx_cs_op[p]/mx_cs_rev[p]));
   }
   for(const x of ['W','G']){
     set('mx_hq_fob_d'+x, d$(mx_fob.S-mx_fob[x]),     cls_prof(mx_fob.S-mx_fob[x]));
